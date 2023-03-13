@@ -1,17 +1,20 @@
-//const sequelize=require("../webAppBoardSequelize");
 const {Sequelize, DataTypes}=require("sequelize");
-
-//sequelize models 의 필드로 boardsEntity 가 생기고 명시됨
-
-
-module.exports=(sequelize)=>{
-    //console.log(boardsEntity===sequelize.models.boardsEntity)
-    //SELETC * FROM boards as boardsEntity
-    const boardsEntity=sequelize.define("boardsEntity",{
-        b_id:{
+module.exports=function BoardReplies(sequelize){
+    const boardRepliesEntity=sequelize.define("boardRepliesEntity",{
+        br_id:{
             type:DataTypes.INTEGER.UNSIGNED,
             primaryKey:true,
             autoIncrement:true
+        },
+        b_id:{
+            type:DataTypes.INTEGER.UNSIGNED,
+            allowNull:false,
+            references:{
+                model:"boardsEntity",
+                key:"b_id",
+                onDelete:"CASCADE",
+                onUpdate:"CASCADE"
+            }
         },
         u_id:{
             type:DataTypes.STRING(255),
@@ -19,6 +22,16 @@ module.exports=(sequelize)=>{
             references:{
                 model:"usersEntity",
                 key:"u_id",
+                onDelete:"CASCADE",
+                onUpdate:"CASCADE"
+            }
+        },
+        parent_br_id:{
+            type:DataTypes.INTEGER.UNSIGNED,
+            allowNull:false,
+            references:{
+                model:"boardRepliesEntity",
+                key:"br_id",
                 onDelete:"CASCADE",
                 onUpdate:"CASCADE"
             }
@@ -35,20 +48,16 @@ module.exports=(sequelize)=>{
             type:DataTypes.ENUM("PUBLIC","PRIVATE","REPORT","BLOCK"),
             defaultValue:"PUBLIC"
         },
-        title:{
+        img_path:{
             type:DataTypes.STRING(255)
         },
         content:{
             type:DataTypes.TEXT,
             allowNull:false
-        },
-        view_count:{
-            type:DataTypes.INTEGER.UNSIGNED,
-            defaultValue:0
         }
     },{
-        tableName:"boards",
+        tableName:"board_replies",
         timestamps:false
     });
-    return boardsEntity;
-}
+    return boardRepliesEntity;
+};

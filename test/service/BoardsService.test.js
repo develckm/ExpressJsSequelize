@@ -16,12 +16,13 @@ describe("BoardsService test",()=>{
         console.log(JSON.stringify(boards,"boardsEntity",2));
     });
     test("detail join 테스트",async ()=>{
-        const board=await boardsService.detail(6);
+        const board=await boardsService.detail(7);
         console.log(JSON.stringify(board,"boardEntity",2));
         //user 를 호출할 때 Lazy Loading 지연로딩이 발생 (게으른 연산!)
         //필요할때만 조회하기 때문에 데이터 낭비가 없다.
         //단점: join 보다 느리다.
-        const user=await board.getUser();
-        console.log(JSON.stringify(user,"usersEntity",2))
+        //const user=await board.getUser();
+        //console.log(JSON.stringify(user,"usersEntity",2))
+
     });
 })
