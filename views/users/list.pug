@@ -1,0 +1,87 @@
+extends ../layout
+block content
+    h2.my-4 유저 리스트
+
+    form.mx-auto.mt-4.mb-2(method="GET", action="/users/list.do",style="width:400px")
+        input(type="hidden",value=params.field,name="field")
+        input(type="hidden",value=params.value,name="value")
+        div.input-group
+            label.input-group-text 정렬
+            select.form-select(name="orderField")
+                option(value="") 필드
+                option(value="u_id", selected=(params.orderField === "u_id")) 아이디
+                option(value="name", selected=(params.orderField === "name")) 이름
+                option(value="post_time", selected=(params.orderField === "post_time")) 작성일
+                option(value="phone", selected=(params.orderField === "phone")) 폰번호
+                option(value="birth", selected=(params.orderField === "email")) 이메일
+                option(value="gender", selected=(params.orderField === "birth")) 생일
+                option(value="view_count", selected=(params.orderField === "gender")) 성별
+                option(value="address", selected=(params.orderField === "address")) 주소
+            select.form-select(name="orderDirect")
+                option(value="") 방향
+                option(value="DESC", selected=(params.orderDirect === "DESC")) 내림차순
+                option(value="ASC", selected=(params.orderDirect === "ASC")) 오름차순
+            button.btn.btn-outline-primary 제출
+
+    form.mx-auto.mb-4(method="GET", action="/users/list.do",style="width:400px")
+        input(type="hidden",value=params.orderField,name="orderField")
+        input(type="hidden",value=params.orderDirect,name="orderDirect")
+        div.input-group
+            label.input-group-text 검색
+            select.form-select(name="field")
+                option(value="") 필드
+                option(value="u_id", selected=(params.field === "u_id")) 아이디
+                option(value="name", selected=(params.field === "name")) 이름
+                option(value="post_time", selected=(params.field === "post_time")) 작성일
+                option(value="phone", selected=(params.field === "phone")) 폰번호
+                option(value="birth", selected=(params.field === "email")) 이메일
+                option(value="gender", selected=(params.field === "birth")) 생일
+                option(value="view_count", selected=(params.field === "gender")) 성별
+                option(value="address", selected=(params.field === "address")) 주소
+                option(value="permission", selected=(params.field === "permission")) 권한
+            input.form-control(name="value", value=(params.value),placeholder="내용")
+            button.btn.btn-outline-info 제출
+
+    ul.nav.nav-tabs.justify-content-end
+        li.nav-item
+            a.nav-link(href="/users/list.do" class=((!params.field && !params.value) ? 'active' : '')) 전체
+        li.nav-item
+            a.nav-link(href="?field=permission&value=USER" class=((params.field === 'permission' && params.value === 'USER') ? 'active' : '')) 공개
+        li.nav-item
+            a.nav-link(href="?field=permission&value=SILVER" class=((params.field === 'permission' && params.value === 'SILVER') ? 'active' : '')) 비공개
+        li.nav-item
+            a.nav-link(href="?field=permission&value=GOLD" class=((params.field === 'permission' && params.value === 'GOLD') ? 'active' : '')) 신고
+        li.nav-item
+            a.nav-link(href="?field=permission&value=PRIVATE" class=((params.field === 'permission' && params.value === 'PRIVATE') ? 'active' : '')) 차단
+
+
+    table#userTable.table.table-striped.table-hover
+        thead
+            tr
+                th 아이디
+                th 이름
+                th 전화번호
+                th 이메일
+                th 가입일
+                th 생년월일
+                th 성별
+                th 주소
+                th 권한
+                th.text-right 동작
+        tbody
+            each user in users
+                tr
+                    td #{user.u_id}
+                    td #{user.name}
+                    td #{user.phone}
+                    td #{user.email}
+                    td #{user.post_time && user.post_time.toLocaleDateString("ko") }
+                    td #{user.birth}
+                    td #{user.gender}
+                    td #{user.address}
+                    td #{user.permission}
+                    td.text-right
+                        a.btn.btn-outline-primary.btn-sm(href=`/users/${user.u_id}/detail.do`) 상세
+
+    -const pageVo = users.pageVo;
+    include ../pagination

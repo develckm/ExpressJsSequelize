@@ -1,4 +1,4 @@
-const BoardsService=require("../../model/service/BoardService");
+const BoardsService=require("../../model/service/BoardsService");
 const boardsService=new BoardsService();
 //2시까지 식사하고 오세요~
 describe("BoardsService test",()=>{

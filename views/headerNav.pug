@@ -1,0 +1,48 @@
+nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
+    div.container-fluid
+        a.navbar-brand(href="/") HOME
+        button.navbar-toggler(data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent")
+            span.navbar-toggler-icon
+        div#navbarSupportedContent.collapse.navbar-collapse
+            ul.navbar-nav.me-auto.mb-2.mb-lg-0
+                li.nav-item.dropdown
+                    a.nav-link.dropdown-toggle(href="#" data-bs-toggle="dropdown") 유저관리
+                    ul.dropdown-menu
+                        li
+                            a.dropdown-item(href="/users/list.do") 리스트
+                        li
+                            a.dropdown-item(href="/users/insert.do") 등록
+                li.nav-item.dropdown
+                    a.nav-link.dropdown-toggle(href="#" data-bs-toggle="dropdown") 게시글관리
+                    ul.dropdown-menu
+                        li
+                            a.dropdown-item(href="/boards/list.do") 리스트
+                        li
+                            a.dropdown-item(href="/boards/insert.do") 등록
+                li.nav-item
+                    a.nav-link(href="/replies/list.do") 리스트
+                li.nav-item
+                    a.nav-link(href="/hashCodes/list.do") 해시코드리스트
+            div#loginCont
+                if(!loginUser)
+                    a.btn.btn-outline-light(href="/users/login.do") 로그인
+                else
+                    a.text-secondary.me-2(href=`/users/${loginUser.u_id}/detail.do`)=`(${loginUser.u_id}) ${loginUser.name}`
+                    a.text-secondary(href="/users/logout.do") 로그아웃
+                    span=actionMsg
+    //수정 등록 삭제 action 시 상태를 세션의 actionMsg 로 보내면 띄우는 모달
+    -if(actionMsg)
+        #actionMsgModal.modal.show
+            .modal-dialog.modal-dialog-centered
+                .modal-content
+                    .modal-header
+                        h1.modal-title.fs-5#exampleModalToggleLabel Action 상태 메세지
+                        button.btn-close(type='button', data-bs-dismiss='modal', aria-label='Close')
+                    .modal-body=actionMsg
+                        |
+                    .modal-footer
+                        button.btn.btn-primary(type="button" class="btn btn-secondary" data-bs-dismiss="modal") Close
+
+        script.
+            var myModal = new bootstrap.Modal(document.getElementById('actionMsgModal'), {});
+            myModal.show()

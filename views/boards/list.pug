@@ -1,0 +1,84 @@
+extends ../layout
+block content
+    h2.my-4 게시글 리스트
+    form.mx-auto.mt-4.mb-2(method="GET", action="/boards/list.do",style="width:400px")
+        input(type="hidden",value=params.field,name="field")
+        input(type="hidden",value=params.value,name="value")
+        div.input-group
+            label.input-group-text 정렬
+            select.form-select(name="orderField")
+                option(value="") 필드
+                option(value="u_id", selected=(params.orderField === "u_id")) 유저
+                option(value="post_time", selected=(params.orderField === "post_time")) 작성일
+                option(value="update_time", selected=(params.orderField === "update_time")) 수정일
+                option(value="title", selected=(params.orderField === "title")) 제목
+                option(value="b_id", selected=(params.orderField === "b_id")) 번호
+                option(value="view_count", selected=(params.orderField === "view_count")) 조회수
+                option(value="status", selected=(params.orderField === "status")) 상태
+            select.form-select(name="orderDirect")
+                option(value="") 방향
+                option(value="DESC", selected=(params.orderDirect === "DESC")) 내림차순
+                option(value="ASC", selected=(params.orderDirect === "ASC")) 오름차순
+            button.btn.btn-outline-primary 제출
+
+    form.mx-auto.mb-4(method="GET", action="/boards/list.do",style="width:400px")
+        input(type="hidden",value=params.orderField,name="orderField")
+        input(type="hidden",value=params.orderDirect,name="orderDirect")
+        div.input-group
+            label.input-group-text 검색
+            select.form-select(name="field")
+                option(value="") 필드
+                option(value="u_id", selected=(params.field==="u_id")) 유저
+                option(value="post_time", selected=(params.field==="post_time")) 작성일
+                option(value="update_time", selected=(params.field==="update_time")) 수정일
+                option(value="title", selected=(params.field==="title")) 제목
+                option(value="b_id", selected=(params.field==="b_id")) 번호
+                option(value="view_count", selected=(params.field==="view_count")) 조회수
+                option(value="status", selected=(params.field==="status")) 상태
+            input.form-control(name="value", value=(params.value),placeholder="내용")
+            button.btn.btn-outline-info 제출
+
+    ul.nav.nav-tabs.justify-content-end
+        li.nav-item
+            a.nav-link(href="/boards/list.do" class=((!params.field&&!params.value) ? 'active' : '')) 전체
+        li.nav-item
+            a.nav-link(href="/boards/list.do?field=status&value=PUBLIC" class=((params.field==='status'&&params.value==='PUBLIC') ? 'active' : '')) 공개
+        li.nav-item
+            a.nav-link(href="/boards/list.do?field=status&value=PRIVATE" class=((params.field==='status'&&params.value==='PRIVATE') ? 'active' : '')) 비공개
+        li.nav-item
+            a.nav-link(href="/boards/list.do?field=status&value=REPORT" class=((params.field==='status'&&params.value==='REPORT') ? 'active' : '')) 신고
+        li.nav-item
+            a.nav-link(href="/boards/list.do?field=status&value=BLOCK" class=((params.field==='status'&&params.value==='BLOCK') ? 'active' : '')) 차단
+
+
+    table#userTable.table.table-striped.table-hover
+        thead
+            tr
+                th 게시글 번호
+                //th 비밀번호
+                th 아이디
+                th 작성시간
+                th 최종수정시간
+                th 상태
+                th 제목
+                th 조회수
+                th.text-right 동작
+        tbody
+            each board in boards
+                tr
+                    td #{board.b_id}
+                    //td #{user.pw}
+                    td #{board.u_id}
+                    //td #{user.phone}
+                    //td #{user.email}
+                    td #{board.post_time ? board.post_time.toLocaleDateString("ko") : ""}
+                    td #{board.update_time ? board.update_time.toLocaleDateString("ko") : ""}
+                    td #{board.status}
+                    td #{board.title}
+                    //td #{user.detail_address}
+                    //td #{board.content}
+                    td #{board.view_count}
+                    td.text-right
+                        a.btn.btn-outline-primary.btn-sm(href=`/boards/${board.b_id}/detail.do`) 상세
+    -const pageVo=boards.pageVo;
+    include ../pagination
